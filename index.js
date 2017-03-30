@@ -85,6 +85,7 @@ async function initKtv () {
     console.error('error', error)
     process.exit()
   }
+  console.log('success', 'successful')
 }
 
 initKtv()
