@@ -1,5 +1,5 @@
 {
-    "internalApi": "http://192.168.1.9:3000",
+    "internalApi": "http://staging-yedian.chinacloudapp.cn:3003",
     "mysql":{
       "host": "127.0.0.1",
       "user": "root",

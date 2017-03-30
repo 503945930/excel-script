@@ -4,13 +4,13 @@ import Mysql from './lib/mysql'
 import path from 'path'
 
 /**
- * 读取BD信息表0324.xlsx
+ * 读取BD信息表.xlsx
  */
 async function init () {
   try {
     // 读取excel 数据
     let excel = new Excel({
-      path: path.join(__dirname, './file/BD信息表0324.xlsx')
+      path: path.join(__dirname, './file/BD信息表.xlsx')
     })
     let data = excel.parseJson()
 
@@ -18,6 +18,7 @@ async function init () {
       // auth
       let obj = `{
             "displayName":"${item['BD姓名']}",
+            "email":"${item['邮箱']}",
             "role": "${item['角色']},commodity-operattor",
             "mobile":{
               "profile": {
@@ -56,17 +57,23 @@ async function initKtv () {
     let obj = {}
     for (let item of data['Sheet1']) {
       let db = new Mysql()
+      let ktvId = 0
+      if (item['ktvId'] === undefined) {
+        ktvId = parseInt(item['xktvId'].substring(4))
+      } else {
+        ktvId = item['ktvId']
+      }
+      /// console.log('ktvId', ktvId)
       // 先从obj里面取
       if (obj[item['姓名']]) {
         let sqlIn = `INSERT INTO yy_bd_ktv(bdId,ktvId,xktvId) 
-                VALUES ('${obj[item['姓名']]}','${item['ktvId']}','${item['xktvId']}')`
+                VALUES ('${obj[item['姓名']]}','${ktvId}','${item['xktvId']}')`
         await db.insert(sqlIn)
       } else {
         let sql = `SELECT  bdId FROM yy_operator WHERE name='${item['姓名']}' limit 1`
-
         let result = await db.find(sql)
-        let sqlIn = `INSERT INTO yy_bd_ktv(bdId,ktvId,xktvId) 
-                VALUES ('${result[0].bdId}','${item['ktvId']}','${item['xktvId']}')`
+        let sqlIn = `INSERT INTO yy_bd_ktv(bdId,ktvId,xktvId)
+                VALUES ('${result[0].bdId}','${ktvId}','${item['xktvId']}')`
         await db.insert(sqlIn)
         obj[item['姓名']] = result[0].bdId
       }
