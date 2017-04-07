@@ -19,7 +19,7 @@ async function init () {
       let obj = `{
             "displayName":"${item['BD姓名']}",
             "email":"${item['邮箱']}",
-            "role": "${item['角色']},commodity-operattor",
+            "role": "${item['角色']},commodity-operator",
             "mobile":{
               "profile": {
                 "mobile": "${item['手机号']}"
