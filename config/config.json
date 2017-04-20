@@ -1,10 +1,11 @@
 
 {
     "internalApi": "http://staging-yedian.chinacloudapp.cn:3003",
+    "userApi": "http://localhost:3003",
     "mysql":{
-      "host": "stagingmysql1.mysqldb.chinacloudapi.cn",
-      "user": "stagingmysql1%staging",
-      "password": "agargh2IUHiu",
-      "database": "yedian-abicloud"
+      "host": "127.0.0.1",
+      "user": "root",
+      "password": "root",
+      "database": "yedian-user"
     }
 }

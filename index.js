@@ -15,8 +15,9 @@ async function init () {
     let data = excel.parseJson()
 
     for (let item of data['BD格式']) {
-      // auth
-      let obj = `{
+      try {
+              // auth
+        let obj = `{
             "displayName":"${item['BD姓名']}",
             "email":"${item['邮箱']}",
             "role": "${item['角色']},commodity-operator",
@@ -26,18 +27,22 @@ async function init () {
               }
             }
           }`
-      let auth = new Auth()
-      let body = await auth.create(JSON.parse(obj))
+        let auth = new Auth()
+        let body = await auth.create(JSON.parse(obj))
       // mysql
-      let db = new Mysql()
-      let sql = `INSERT INTO yy_operator(bdId,name,mobile,role,cityCode) 
+        let db = new Mysql()
+        let sql = `INSERT INTO yy_operator(bdId,name,mobile,role,cityCode) 
                 VALUES ('${body.id}','${item['BD姓名']}','${item['手机号']}','${item['角色']}','${item['城市ID']}')`
-      await db.insert(sql)
-      db.end()
+        await db.insert(sql)
+        db.end()
+      } catch (error) {
+        continue
+      }
     }
   } catch (error) {
     console.error('error', error)
-    process.exit()
+
+  //  process.exit()
   }
 
   console.log('success', 'successful')
@@ -72,18 +77,22 @@ async function initKtv () {
       } else {
         let sql = `SELECT  bdId FROM yy_operator WHERE name='${item['姓名']}' limit 1`
         let result = await db.find(sql)
+        if (result.length === 0) {
+          console.log('xktvId', item['xktvId'])
+          db.end()
+          continue
+        }
         let sqlIn = `INSERT INTO yy_bd_ktv(bdId,ktvId,xktvId)
                 VALUES ('${result[0].bdId}','${ktvId}','${item['xktvId']}')`
         await db.insert(sqlIn)
         obj[item['姓名']] = result[0].bdId
       }
-
       db.end()
      // console.log('result', result[0].bdId)
     }
   } catch (error) {
     console.error('error', error)
-    process.exit()
+   // process.exit()
   }
   console.log('success', 'successful')
 }

@@ -6,7 +6,7 @@
   "author": "wei",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon  index.js --exec babel-node"
+    "start": "nodemon  couchbase.js --exec babel-node"
   },
   "dependencies": {
     "immutable": "^3.8.1",
